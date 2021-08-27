@@ -1,0 +1,5 @@
+/vendor/
+/*.lock
+.idea/*
+/.idea
+/demo.php

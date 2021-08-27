@@ -1,0 +1,26 @@
+{
+    "name": "ernst-lee/php-shopify",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ernst-lee",
+            "email": "1114100456@qq.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "osiset/basic-shopify-api": "^10.0",
+        "pimple/pimple": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shopify\\": "src/"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+             "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
+}
