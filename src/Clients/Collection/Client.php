@@ -94,6 +94,17 @@ class Client extends BaseClient
         return $this->getRestData($response);
     }
 
+    public function getProducts($collectionId) {
+        $url = $this->baseUri . 'collections/' . $collectionId . '/products.json';
+
+        $params = [
+            'limit' => 1,
+        ];
+        $result = $this->restRequestAllPage($url, $params);
+
+        return $result;
+    }
+
     /**
      * 添加产品集合关联
      * @param $collectionId

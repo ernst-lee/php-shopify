@@ -44,7 +44,7 @@ trait WithResponse {
             'data' => $body,
             'status' => $data['status'],
             'error' => $error,
-            'next' => $data['link']['next'],
+            'next' => isset($data['link']['next']) ? $data['link']['next'] : '',
         ];
     }
 }

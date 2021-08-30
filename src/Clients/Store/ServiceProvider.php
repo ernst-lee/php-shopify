@@ -17,7 +17,7 @@ class ServiceProvider implements ServiceProviderInterface {
         };
 
         $app['location'] = function ($app) {
-            return new Shop($app);
+            return new Location($app);
         };
     }
 }

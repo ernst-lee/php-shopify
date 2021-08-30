@@ -23,6 +23,18 @@ class BaseClient{
         $this->api = $app->getApi();
     }
 
+    public function rest(string $method, string $url, array $params = []) {
+        $response = $this->api->rest($method, $url, $params);
+
+        return $this->getRestData($response);
+    }
+
+    public function graph(string $query, array $variables = []) {
+        $response = $this->api->graph($query, $variables);
+
+        return $this->getGraphData($response);
+    }
+
     public function mergeOptions(array &$array1, $options) {
         if (is_array($options)) {
             foreach($options as $key => $value) {

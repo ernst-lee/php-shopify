@@ -30,7 +30,7 @@ class Location extends BaseClient
                       }
                     }';
 
-        $response = $this->api->graph('POST', $query);
+        $response = $this->api->graph($query);
 
         return $this->getGraphData($response);
     }

@@ -8,7 +8,7 @@
 namespace Shopify\Core\Traits;
 
 trait WithRequest {
-    public function restRequestAllPage($url, $params) {
+    public function restRequestAllPage($url, $params = []) {
         $result = [
             'data' => [],
         ];
