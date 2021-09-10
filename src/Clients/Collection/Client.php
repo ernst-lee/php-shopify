@@ -98,7 +98,7 @@ class Client extends BaseClient
         $url = $this->baseUri . 'collections/' . $collectionId . '/products.json';
 
         $params = [
-            'limit' => 1,
+            'limit' => 100,
         ];
         $result = $this->restRequestAllPage($url, $params);
 

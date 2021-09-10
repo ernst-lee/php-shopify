@@ -44,15 +44,40 @@ class Client extends BaseClient
         $mutation = 'mutation productCreate($input: ProductInput!) {
                       productCreate(input: $input) {
                         product {
-                          id
-                          variants(first:250) {
-                            edges{
+                           id
+                           images(first: 50) {
+                              edges {
                                 node {
-                                    id
-                                    sku
+                                  id
+                                  src
                                 }
+                              }
                             }
-                          }
+                            variants(first: 250) {
+                              edges {
+                                node {
+                                  image {
+                                    id
+                                  }
+                                  id
+                                  barcode
+                                  compareAtPrice
+                                  price
+                                  sku
+                                  title
+                                  inventoryQuantity
+                                  selectedOptions {
+                                    name
+                                    value
+                                  }
+                                }
+                              }
+                            }
+                            createdAt
+                            options {
+                              name
+                              values
+                            }
                         }
                         shop {
                           id
@@ -78,15 +103,40 @@ class Client extends BaseClient
         $mutation = 'mutation productUpdate($input: ProductInput!) {
                       productUpdate(input: $input) {
                         product {
-                          id
-                          variants(first:250) {
-                            edges{
+                            id
+                            images(first: 50) {
+                              edges {
                                 node {
-                                    id
-                                    sku
+                                  id
+                                  src
                                 }
+                              }
                             }
-                          }
+                            variants(first: 250) {
+                              edges {
+                                node {
+                                  image {
+                                    id
+                                  }
+                                  id
+                                  barcode
+                                  compareAtPrice
+                                  price
+                                  sku
+                                  title
+                                  inventoryQuantity
+                                  selectedOptions {
+                                    name
+                                    value
+                                  }
+                                }
+                              }
+                            }
+                            createdAt
+                            options {
+                              name
+                              values
+                            }
                         }
                         userErrors {
                           field
@@ -97,6 +147,114 @@ class Client extends BaseClient
 
         $response = $this->api->graph($mutation, ['input' => $options]);
 
+        return $this->getGraphData($response);
+    }
+
+    public function createMedia($productId, $imageSrc) {
+        $mutation = 'mutation productCreateMedia($productId: ID!, $media: [CreateMediaInput!]!) {
+                      productCreateMedia(productId: $productId, media: $media) {
+                         media {
+                            mediaContentType
+                            mediaErrors {
+                                code
+                                details 
+                                message 
+                            }
+                            preview {
+                                image {
+                                    src
+                                }
+                                status
+                            }
+                            status 
+                        }
+                        mediaUserErrors {
+                          code
+                          field
+                          message
+                        }
+                        product {
+                          id
+                        }
+                      }
+                    }';
+
+        $input = [
+            'productId' => 'gid://shopify/Product/' . $productId,
+            'media' => [
+                'originalSource' => $imageSrc,
+                'mediaContentType' => 'IMAGE',
+            ]
+        ];
+
+        $response = $this->api->graph($mutation, $input);
+        return $this->getGraphData($response);
+    }
+
+    public function appendProductImages($productId, $images) {
+        $mutation = 'mutation productAppendImages($input: ProductAppendImagesInput!) {
+                        productAppendImages(input: $input) {
+                            newImages {
+                                id
+                                originalSrc 
+                            }
+                            product {
+                                id
+                            }
+                            userErrors {
+                                field
+                                message
+                            }
+                          }
+                        }';
+
+        $input = [
+            'input' => [
+                'id' => 'gid://shopify/Product/' . $productId,
+                'images' => $images,
+            ]
+        ];
+
+        $response = $this->api->graph($mutation, $input);
+        return $this->getGraphData($response);
+    }
+
+    public function bulkCreateProductVariants($productId, $variants) {
+        $mutation = 'mutation productVariantsBulkCreate($variants: [ProductVariantsBulkInput!]!, $productId: ID!) {
+                      productVariantsBulkCreate(variants: $variants, productId: $productId) {
+                        product {
+                          id
+                        }
+                        productVariants {
+                          image {
+                            id
+                          }
+                          id
+                          barcode
+                          compareAtPrice
+                          price
+                          sku
+                          title
+                          inventoryQuantity
+                          selectedOptions {
+                            name
+                            value
+                          }
+                        }
+                        userErrors {
+                          code
+                          field
+                          message
+                        }
+                      }
+                    }';
+
+        $input = [
+            'variants' => $variants,
+            'productId' => 'gid://shopify/Product/' . $productId,
+        ];
+
+        $response = $this->api->graph($mutation, $input);
         return $this->getGraphData($response);
     }
 

@@ -11,10 +11,10 @@ trait WithResponse {
     public function getGraphData($data, $pageParentKey = '') {
         $response = $data['body'];
 
-        $container = $response->container;
+        $container = $response ? $response->container : [];
 
         $next = '';
-        if ($pageParentKey) {
+        if ($pageParentKey && isset($container['data'][$pageParentKey]['pageInfo']['hasNextPage'])) {
             $hasNext = $container['data'][$pageParentKey]['pageInfo']['hasNextPage'];
             if ($hasNext) {
                 $end = end($container['data'][$pageParentKey]['edges']);
@@ -22,7 +22,7 @@ trait WithResponse {
             }
         }
         return [
-            'data' => $container['data'],
+            'data' => isset($container['data']) ? $container['data'] : '',
             'status' => $data['status'],
             'error' => $data['errors'],
             'next' => $next,
@@ -37,7 +37,7 @@ trait WithResponse {
             $body = [];
             $error = $data['body'];
         } else {
-            $body = $response->container;
+            $body = $response ? $response->container : [];
         }
 
         return [
