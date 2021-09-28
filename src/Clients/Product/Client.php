@@ -258,6 +258,56 @@ class Client extends BaseClient
         return $this->getGraphData($response);
     }
 
+    public function bulkUpdateProductVariants($productId, $variants) {
+        $mutation = 'mutation productVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+                        productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+                            userErrors {
+                                field
+                                message
+                            }
+                            product {
+                                id
+                            }
+                            productVariants {
+                              image {
+                                id
+                              }
+                              id
+                              barcode
+                              compareAtPrice
+                              price
+                              sku
+                              title
+                              inventoryQuantity
+                              selectedOptions {
+                                name
+                                value
+                              }
+                            }
+                        }
+                    }';
+
+        $input = [
+            'variants' => $variants,
+            'productId' => 'gid://shopify/Product/' . $productId,
+        ];
+
+        $response = $this->api->graph($mutation, $input);
+        return $this->getGraphData($response);
+    }
+
+    public function editProductVariant($variantId, $options) {
+        $url = $this->baseUri . 'variants/' . $variantId . '.json';
+
+        $input = [
+            'id' => $variantId,
+        ];
+        $input = array_merge($input, $options);
+        $response = $this->api->rest('PUT', $url, ['variant' => $input]);
+
+        return $this->getRestData($response);
+    }
+
     public function deleteProductVariation($productVariationId) {
         $mutation = 'mutation productVariantDelete($id: ID!) {
                       productVariantDelete(id: $id) {

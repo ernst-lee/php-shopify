@@ -22,5 +22,10 @@ class ServiceProvider implements ServiceProviderInterface {
         $app['draftOrder'] = function ($app) {
             return new DraftOrder($app);
         };
+
+        //配送履行
+        $app['fulfillment'] = function ($app) {
+            return new Fulfillment($app);
+        };
     }
 }

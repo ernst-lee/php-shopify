@@ -36,7 +36,23 @@ class Order extends BaseClient
     }
 
     /**
+     * 取消订单。已付款且已发货的订单无法取消。
+     * 订单状态更新为取消，并且可以指定部分产品退款，不指定产品，则全部退款
+     * @param $orderId
+     * @param $options
+     * @return array
+     */
+    public function cancelOrder($orderId, $options = []) {
+        $url = $this->baseUri . 'orders/' . $orderId . '/cancel.json';
+
+        $response = $this->api->rest('POST', $url, $options);
+
+        return $this->getRestData($response);
+    }
+
+    /**
      * 关闭订单
+     * 关闭的订单是没有更多工作要做的订单。所有项目都已完成或退款。
      * @param $orderId
      * @return array
      */
@@ -60,21 +76,6 @@ class Order extends BaseClient
 
         return $this->getRestData($response);
     }
-
-    /**
-     * 取消订单。已付款且已发货的订单无法取消。
-     * @param $orderId
-     * @param $options
-     * @return array
-     */
-    public function cancelOrder($orderId, $options = []) {
-        $url = $this->baseUri . 'orders/' . $orderId . '/close.json';
-
-        $response = $this->api->rest('POST', $url, $options);
-
-        return $this->getRestData($response);
-    }
-
 
     public function addOrder($options) {
         $url = $this->baseUri . 'orders.json';
@@ -103,7 +104,7 @@ class Order extends BaseClient
     public function editSimpleOrder($orderId, $options) {
         $url = $this->baseUri . 'orders/' . $orderId . '.json';
 
-        $response = $this->api->rest('PUT', $url, $options);
+        $response = $this->api->rest('PUT', $url, ['order' => $options]);
 
         return $this->getRestData($response);
     }
@@ -325,6 +326,20 @@ class Order extends BaseClient
         $response = $this->api->graph($mutation, $input);
 
         return $this->getGraphData($response);
+    }
+
+    public function refundOrderCalculate($orderId, $options) {
+        $url = $this->baseUri . 'orders/' . $orderId . '/refunds/calculate.json';
+
+        $response = $this->api->rest('POST', $url, ['refund' => $options]);
+        return $this->getRestData($response);
+    }
+
+    public function refundOrder($orderId, $options) {
+        $url = $this->baseUri . 'orders/' . $orderId . '/refunds.json';
+
+        $response = $this->api->rest('POST', $url, ['refund' => $options]);
+        return $this->getRestData($response);
     }
 
     /**

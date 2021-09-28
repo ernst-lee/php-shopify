@@ -19,6 +19,7 @@ use Shopify\Core\ServiceContainer;
  * @property Clients\Order\Order                                    $order
  * @property Clients\Order\AbandonedOrder                           $abandonedOrder
  * @property Clients\Order\DraftOrder                               $draftOrder
+ * @property Clients\Inventory\Client                               $inventory
  */
 class App extends ServiceContainer {
     protected $providers = [
@@ -26,5 +27,6 @@ class App extends ServiceContainer {
         Clients\Store\ServiceProvider::class,
         Clients\Product\ServiceProvider::class,
         Clients\Order\ServiceProvider::class,
+        Clients\Inventory\ServiceProvider::class,
     ];
 }

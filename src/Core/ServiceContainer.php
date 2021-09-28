@@ -35,6 +35,7 @@ class ServiceContainer extends Container{
         'max_retry_attempts' => 3,
         'retry_on_status' => [429, 503, 400],
 
+        'enable_redis' => false,
         'redis_config' => [
             'hostname' => '127.0.0.1',
             'port' => 6379,
@@ -58,6 +59,9 @@ class ServiceContainer extends Container{
      */
     public function __construct(array $config = [], array $prepends = [], string $id = null)
     {
+        if (isset($config['redis_config']) && $config['redis_config']) {
+            $config['enable_redis'] = true;
+        }
         $this->userConfig = array_replace_recursive($this->defaultConfig, $config);
 
         $this->id = $id;
@@ -137,8 +141,13 @@ class ServiceContainer extends Container{
     public function initialize() {
         $config = $this->userConfig;
 
-        $redisStore = new RedisStore($config['redis_config']);
-        $api = new BasicShopifyAPI($this->options, $redisStore, $redisStore);
+        if ($config['enable_redis']) {
+            $redisStore = new RedisStore($config['redis_config']);
+            $api = new BasicShopifyAPI($this->options, $redisStore, $redisStore);
+        } else {
+            $api = new BasicShopifyAPI($this->options);
+        }
+
         $api->setSession(new Session($config['shop'], $config['api_key']));
 
         $this->api = $api;
