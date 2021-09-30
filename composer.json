@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "osiset/basic-shopify-api": "8.2.x-dev",
+        "osiset/basic-shopify-api": "8.2.0",
         "pimple/pimple": "^3.4"
     },
     "autoload": {
