@@ -45,6 +45,15 @@ class Client extends BaseClient
                       productCreate(input: $input) {
                         product {
                            id
+                           metafields(first: 50) {
+                            edges {
+                              node {
+                                id
+                                key
+                                namespace
+                              }
+                            }
+                           }
                            images(first: 50) {
                               edges {
                                 node {
@@ -104,6 +113,15 @@ class Client extends BaseClient
                       productUpdate(input: $input) {
                         product {
                             id
+                            metafields(first: 50) {
+                             edges {
+                              node {
+                                id
+                                key
+                                namespace
+                              }
+                             }
+                            }
                             images(first: 50) {
                               edges {
                                 node {
@@ -148,6 +166,22 @@ class Client extends BaseClient
         $response = $this->api->graph($mutation, ['input' => $options]);
 
         return $this->getGraphData($response);
+    }
+
+    /**
+     * @param $productId
+     * @param $options
+     * @return array
+     */
+    public function simpleEditProduct($productId, $options) {
+        $url = $this->baseUri . 'products/' . $productId . '.json';
+
+        $params = [
+            'product' => $options,
+        ];
+        $response = $this->api->rest('PUT', $url, $params);
+
+        return $this->getRestData($response);
     }
 
     public function createMedia($productId, $imageSrc) {
